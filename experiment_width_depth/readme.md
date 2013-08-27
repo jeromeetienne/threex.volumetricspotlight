@@ -2,35 +2,17 @@ threex.volumetricspotlight
 ==========================
 
 threex.volumetricspotlight is a three.js extension which provide a 'good enought' spot light.
-as in described in 
-["Good Enough" Volumetrics for Spotlights](http://john-chapman-graphics.blogspot.fr/2013/01/good-enough-volumetrics-for-spotlights.html)
+as in described in ["Good Enough" Volumetrics for Spotlights](http://john-chapman-graphics.blogspot.fr/2013/01/good-enough-volumetrics-for-spotlights.html)
 post from 
 [john chapman](http://john-chapman-graphics.blogspot.fr/).
 
-Well almost the same, it doesn't include the 
-[smooth sprite](http://example.com)
-feature when the spot cross the ground.
-I implemented it but THREE.DepthMaterial is storing depth on 8 bit.
-It creates strong precisions issues. 
-
-
-
-TODO REFACTORING
-================
-* rename parts
-  * material is one 
-    * THREEx.VolumetricSpotLightMaterial
-  * the actual cylinder is another
-    * THREEx.VolumetricSpotLightMesh
-  * link it to an actual light
-    * something sync it
-
 TODO
 ====
-* DONE remove any depth 
-* if so it become a simple geometry rendering, so one pass
+* remove any depth 
+* if so it become a simple geometry rendering, so pass
 * put the depth work in a backup direction
   * experimentDepth
+
 
 TODO
 ====
