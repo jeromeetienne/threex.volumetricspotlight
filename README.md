@@ -6,14 +6,19 @@ as in described in
 ["Good Enough" Volumetrics for Spotlights](http://john-chapman-graphics.blogspot.fr/2013/01/good-enough-volumetrics-for-spotlights.html)
 post from 
 [john chapman](http://john-chapman-graphics.blogspot.fr/).
-
 Well almost the same, it doesn't include the 
-[smooth sprite](http://example.com)
+[soft](http://blog.wolfire.com/2010/04/Soft-Particles) 
+[particles](http://www.gamerendering.com/2009/09/16/soft-particles/)
 feature when the spot cross the ground.
 I implemented it but THREE.DepthMaterial is storing depth on 8 bit.
 It creates strong precisions issues. 
 
 
+Show Don't Tell
+===============
+* [examples/basic.html](http://jeromeetienne.github.io/threex.volumetricspotlight/examples/basic.html)
+\[[view source](https://github.com/jeromeetienne/threex.volumetricspotlight/blob/master/examples/basic.html)\] :
+It shows a basic example of the usage.
 
 TODO REFACTORING
 ================
