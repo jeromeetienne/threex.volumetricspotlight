@@ -1,41 +1,54 @@
 <!DOCTYPE html>
-<script src='../../examples/vendor/three.js/build/three.js'></script>
+<script src='vendor/three.js/build/three.js'></script>
+<!-- include for threex.volumetricspotlight -->
 <script src='../threex.volumetricspotlightmaterial.js'></script>
-<!-- include for threex.glowdatgui -->
-<script src='../../examples/vendor/three.js/examples/js/libs/dat.gui.min.js'></script>
+<!-- include for datgui tuner -->
+<script src='vendor/three.js/examples/js/libs/dat.gui.min.js'></script>
 <script src='../threex.volumetricspotlightmaterialdatgui.js'></script>
-
+<!-- include body -->
 <body style='margin: 0px; background-color: #000000; overflow: hidden;'><script>
 	var renderer	= new THREE.WebGLRenderer();
 	renderer.setSize( window.innerWidth, window.innerHeight );
-	// renderer.shadowMapEnabled	= true
 	document.body.appendChild( renderer.domElement );
+	renderer.setClearColor('black', 0 );
 
 	var updateFcts	= [];
 	var scene	= new THREE.Scene();
 	scene.fog	= new THREE.FogExp2( 0x000000, 0.1 );
 
-	var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 10);
+	var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.3, 10);
 	camera.position.set(0,2,5)
 	camera.lookAt(scene.position)
 
-
-	// add a ambient light
-	var light	= new THREE.AmbientLight( 0x020202 )
-	scene.add( light )
-	// add a light in front
-	var light	= new THREE.DirectionalLight('white', 1)
-	light.position.set(0.5, 0.5, 2)
-	scene.add( light )
-	// add a light behind
-	var light	= new THREE.DirectionalLight('white', 0.75)
-	light.position.set(-0.5, -0.5, -2)
-	scene.add( light )
-
 	//////////////////////////////////////////////////////////////////////////////////
-	//		add an object and make it move					//
+	//		create a scene							//
 	//////////////////////////////////////////////////////////////////////////////////	
 
+	// add back wall
+	var geometry	= new THREE.CubeGeometry( 20, 0.1, 20, 20, 1, 20 );
+	var material	= new THREE.MeshPhongMaterial({
+		color	: new THREE.Color('gray')
+	});
+	var mesh	= new THREE.Mesh( geometry, material );
+	mesh.receiveShadow	= true
+	mesh.castShadow		= true
+	mesh.rotateX(Math.PI/2)
+	mesh.position.set( 0, -geometry.height/2, -1)
+	scene.add( mesh );
+	// add back wall - wireframe
+	var material	= new THREE.MeshBasicMaterial({
+		wireframe		: true,
+		wireframeLinewidth	: 2,
+		color			: new THREE.Color('black'),
+	});
+	var mesh	= new THREE.Mesh( geometry.clone(), material );
+	mesh.receiveShadow	= true
+	mesh.castShadow		= true
+	mesh.scale.multiplyScalar(1.01)
+	mesh.rotateX(Math.PI/2)
+	mesh.position.set( 0, -geometry.height/2, -1)
+	scene.add( mesh );
+		
 	// add ground
 	var geometry	= new THREE.CubeGeometry( 20, 0.1, 20, 20, 1, 20 );
 	var material	= new THREE.MeshPhongMaterial({
@@ -47,7 +60,7 @@
 	mesh.position.set( 0, -geometry.height/2, 0)
 	scene.add( mesh );
 
-	// add ground
+	// add ground - wireframe
 	var material	= new THREE.MeshBasicMaterial({
 		wireframe		: true,
 		wireframeLinewidth	: 2,
@@ -85,7 +98,7 @@
 	// add a sphere
 	var geometry	= new THREE.SphereGeometry( 0.3, 16, 8 );
 	var material	= new THREE.MeshPhongMaterial({
-		color		: new THREE.Color('gray'),
+		color	: new THREE.Color('gray'),
 	});
 	var mesh	= new THREE.Mesh( geometry, material );
 	mesh.receiveShadow	= true
@@ -93,25 +106,13 @@
 	mesh.position.set(0.5,geometry.radius,0)
 	scene.add( mesh );
 
-
 	//////////////////////////////////////////////////////////////////////////////////
-	//		comment								//
+	//		add a volumetric spotligth					//
 	//////////////////////////////////////////////////////////////////////////////////
-	
-
-	var config	= {
-		shaderDepth	: 'R8',		// R8 or R8G8B8A8
-		// edgeConstrast	: 'LINEAR',	// LINEAR or SMOOTH
-
-		// shaderDepth	: 'R8G8B8A8',	// R8 or R8G8B8A8
-		edgeConstrast	: 'SMOOTH',	// LINEAR or SMOOTH
-	}
-
-	
-	
 
 	// add spot light
-	var geometry	= new THREE.CylinderGeometry( 0.1, 2, 5, 32*2, 20, true);
+	var geometry	= new THREE.CylinderGeometry( 0.1, 1.5, 5, 32*2, 20, true);
+	// var geometry	= new THREE.CylinderGeometry( 0.1, 5*Math.cos(Math.PI/3)/1.5, 5, 32*2, 20, true);
 	geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, -geometry.height/2, 0 ) );
 	geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
 	// geometry.computeVertexNormals()
@@ -123,19 +124,21 @@
 	// 	color		: 0x000000,
 	// 	wireframe	: true,
 	// })
-	var material	= new THREEx.VolumetricSpotLightMaterial({
-		shaderDepth	: config.shaderDepth,
-		edgeConstrast	: config.edgeContrast,
-	})
+	var material	= new THREEx.VolumetricSpotLightMaterial()
 	var mesh	= new THREE.Mesh( geometry, material );
 	mesh.position.set(1.5,2,0)
 	mesh.lookAt(new THREE.Vector3(0,0, 0))
-	material.uniforms.lightColor.value.set('blue')
+	material.uniforms.lightColor.value.set('white')
 	material.uniforms.spotPosition.value	= mesh.position	
 	scene.add( mesh );
 
+	// add a DAT.Gui for fine tuning
 	new THREEx.addVolumetricSpotlightMaterial2DatGui(material)
 
+	//////////////////////////////////////////////////////////////////////////////////
+	//		animate the volumetric spotLight				//
+	//////////////////////////////////////////////////////////////////////////////////
+	
 	updateFcts.push(function(delta, now){
 		var angle	= 0.1 * Math.PI*2*now
 		var target	= new THREE.Vector3(1*Math.cos(angle),0,1*Math.sin(angle))
@@ -143,36 +146,45 @@
 		spotLight.target.position.copy(target)
 	})
 
-	if( config.shaderDepth === 'R8' ){
-		// depthMaterial WITHOUT depth packing
-		var depthMaterial	= new THREE.MeshDepthMaterial();
-	}else if( config.shaderDepth === 'R8G8B8A8' ){
-		// depthMaterial WITH depth packing
-		var depthMaterial	= new THREE.ShaderMaterial({
-// TODO make your own shader
-			uniforms	: THREE.UniformsUtils.clone( THREE.ShaderLib['depthRGBA'].uniforms ),
-			vertexShader	: THREE.ShaderLib['depthRGBA'].vertexShader,
-			fragmentShader	: THREE.ShaderLib['depthRGBA'].fragmentShader,
-		});
-	}else{	console.assert(false) }
-
-	var rtTextureDepth	= new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
-		minFilter	: THREE.LinearFilter,
-		magFilter	: THREE.LinearFilter,
-		format		: THREE.RGBFormat
-	});
-	material.uniforms.tDepth.value	= rtTextureDepth;
-
 	//////////////////////////////////////////////////////////////////////////////////
-	//		comment								//
+	//		link it with a spotLight					//
 	//////////////////////////////////////////////////////////////////////////////////
 	
 	var spotLight	= new THREE.SpotLight()
 	spotLight.position	= mesh.position
 	spotLight.color		= mesh.material.uniforms.lightColor.value
-	spotLight.exponent	= 20;
-	spotLight.intensity	= 1;
-	// scene.add( spotLight )
+	spotLight.exponent	= 30
+	spotLight.angle		= Math.PI/3;
+	spotLight.intensity	= 5
+	scene.add( spotLight )
+	renderer.shadowMapEnabled	= true
+
+	// doesnt seems to work - not moving with the spotLight
+	// var helper	= new THREE.SpotLightHelper(spotLight)
+	// scene.add(helper)
+	// updateFcts.push(function(delta, now){
+	// 	helper.update()
+	// })
+
+
+	var light	= spotLight
+	light.castShadow	= true
+	light.shadowCameraNear	= 0.01
+	light.shadowCameraFar	= 15
+	light.shadowCameraFov	= 45
+
+	light.shadowCameraLeft	= -8
+	light.shadowCameraRight	=  8
+	light.shadowCameraTop	=  8
+	light.shadowCameraBottom= -8
+
+	// light.shadowCameraVisible = true
+
+	light.shadowBias	= 0.0
+	light.shadowDarkness	= 0.5
+
+	light.shadowMapWidth	= 1024
+	light.shadowMapHeight	= 1024
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Camera Controls							//
@@ -182,11 +194,11 @@
 		mouse.x	= (event.clientX / window.innerWidth ) - 0.5
 		mouse.y	= (event.clientY / window.innerHeight) - 0.5
 	}, false)
-	// updateFcts.push(function(delta, now){
-	// 	camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3)
-	// 	camera.position.y += (mouse.y*5 - camera.position.y + 2) * (delta*3)
-	// 	camera.lookAt( scene.position )
-	// })
+	updateFcts.push(function(delta, now){
+		// camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3)
+		// camera.position.y += (mouse.y*5 - camera.position.y + 2) * (delta*3)
+		// camera.lookAt( scene.position )
+	})
 
 	// updateFcts.push(function(delta, now){
 	// 	var angle	= 0.2 * Math.PI*2*now
@@ -198,16 +210,9 @@
 	//////////////////////////////////////////////////////////////////////////////////
 	//		render the scene						//
 	//////////////////////////////////////////////////////////////////////////////////
-	updateFcts.push(function(){
-mesh.visible	= false
-// TODO to replace by shaderLib['depthRGBA']
-		// Render depth into texture
-		scene.overrideMaterial	= depthMaterial;
-		renderer.render(scene, camera, rtTextureDepth, true);
-		scene.overrideMaterial	= null;
-mesh.visible	= true
 
-		renderer.render( scene, camera );		
+	updateFcts.push(function(){
+		renderer.render(scene, camera);		
 	})
 	
 	//////////////////////////////////////////////////////////////////////////////////

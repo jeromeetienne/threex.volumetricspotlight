@@ -13,33 +13,85 @@ feature when the spot cross the ground.
 I implemented it but THREE.DepthMaterial is storing depth on 8 bit.
 It creates strong precisions issues. 
 
-
 Show Don't Tell
 ===============
 * [examples/basic.html](http://jeromeetienne.github.io/threex.volumetricspotlight/examples/basic.html)
 \[[view source](https://github.com/jeromeetienne/threex.volumetricspotlight/blob/master/examples/basic.html)\] :
 It shows a basic example of the usage.
 
+
+How To Install It
+=================
+
+You can install it via script tag
+
+```html
+<script src='threex.volumetricspotlight.js'></script>
+```
+
+Or you can install with [bower](http://bower.io/), as you wish.
+
+```bash
+bower install threex.volumetricspotlight
+```
+
 TODO REFACTORING
 ================
 * rename parts
-  * material is one 
+  * material is one
     * THREEx.VolumetricSpotLightMaterial
   * the actual cylinder is another
     * THREEx.VolumetricSpotLightMesh
   * link it to an actual light
     * something sync it
+    * is it a good idea ?
+* do a minecraft animation 
+  * elvis skin
+  * 2 spots
+  * one music
+* simple minecraft animation
+  * a mincraft character animatied
+  * 2 spots
+* CLOSED/WONTDO what about threex.spotlighthalohelper.js
+  * PRO much shorter than previous one
+  * PRO adding helper in the name
+  * CON: this is not a halo
+  * CON: the google search output seems to say it is volumetric spotlight the proper name
 
-TODO
-====
-* DONE remove any depth 
-* if so it become a simple geometry rendering, so one pass
-* put the depth work in a backup direction
-  * experimentDepth
+threex.volumetricspotlighthelper.js
+===================================
 
-TODO
-====
-* make a datGUI for it.
+Create the object and attached it to the scene.
+
+```javascript
+var helper  = new THREEx.VolumetricSpotLightHelper(light)
+scene.add(helper.object3d);
+```
+
+Then at every frame rendered, you update it.
+
+```
+helper.update(deltaSecond, nowSecond);
+```
+
+threex.volumetricspotlightmaterial.js
+=====================================
+
+```javascript
+var geometry = new THREE.CylinderGeometry(0.0, 1.5, 5, 32*2, 20, true)
+var material = new THREEx.VolumetricSpotLightMaterial(light)
+var mesh = new THREE.Mesh(geometry, material)
+scene.add(mesh)
+```
+
+Possible Improvements
+=====================
+* the original post from chapman include 'soft particles'
+  * i couldnt get it to work
+  * to be precise, it worked with THREE.MeshDepthMaterial
+  * but it lacked precision because the depth is stored on 8bits
+  * i tried with 'depthRGBA' shader which pack it in 32bits
+  * but i failed to take it off
 * issue with depthMap
   * using DepthMaterial atm so 8bits for depth
   * using 'depthRGBA' would provide a 32bits... much better
