@@ -12,7 +12,7 @@
 	document.body.appendChild( renderer.domElement );
 	renderer.setClearColor('black', 0 );
 
-	var updateFcts	= [];
+	var onRenderFcts	= [];
 	var scene	= new THREE.Scene();
 	scene.fog	= new THREE.FogExp2( 0x000000, 0.1 );
 
@@ -139,7 +139,7 @@
 	//		animate the volumetric spotLight				//
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	updateFcts.push(function(delta, now){
+	onRenderFcts.push(function(delta, now){
 		var angle	= 0.1 * Math.PI*2*now
 		var target	= new THREE.Vector3(1*Math.cos(angle),0,1*Math.sin(angle))
 		mesh.lookAt(target)
@@ -162,7 +162,7 @@
 	// doesnt seems to work - not moving with the spotLight
 	// var helper	= new THREE.SpotLightHelper(spotLight)
 	// scene.add(helper)
-	// updateFcts.push(function(delta, now){
+	// onRenderFcts.push(function(delta, now){
 	// 	helper.update()
 	// })
 
@@ -194,13 +194,13 @@
 		mouse.x	= (event.clientX / window.innerWidth ) - 0.5
 		mouse.y	= (event.clientY / window.innerHeight) - 0.5
 	}, false)
-	updateFcts.push(function(delta, now){
+	onRenderFcts.push(function(delta, now){
 		// camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3)
 		// camera.position.y += (mouse.y*5 - camera.position.y + 2) * (delta*3)
 		// camera.lookAt( scene.position )
 	})
 
-	// updateFcts.push(function(delta, now){
+	// onRenderFcts.push(function(delta, now){
 	// 	var angle	= 0.2 * Math.PI*2*now
 	// 	camera.position.x	= 3*Math.cos(angle)
 	// 	camera.position.z	= 3*Math.sin(angle)
@@ -211,7 +211,7 @@
 	//		render the scene						//
 	//////////////////////////////////////////////////////////////////////////////////
 
-	updateFcts.push(function(){
+	onRenderFcts.push(function(){
 		renderer.render(scene, camera);		
 	})
 	
@@ -227,7 +227,7 @@
 		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
 		lastTimeMsec	= nowMsec
 		// call each update function
-		updateFcts.forEach(function(updateFn){
+		onRenderFcts.forEach(function(updateFn){
 			updateFn(deltaMsec/1000, nowMsec/1000)
 		})
 	})

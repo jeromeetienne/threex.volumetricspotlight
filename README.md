@@ -35,28 +35,8 @@ Or you can install with [bower](http://bower.io/), as you wish.
 bower install threex.volumetricspotlight
 ```
 
-TODO REFACTORING
-================
-* rename parts
-  * material is one
-    * THREEx.VolumetricSpotLightMaterial
-  * the actual cylinder is another
-    * THREEx.VolumetricSpotLightMesh
-  * link it to an actual light
-    * something sync it
-    * is it a good idea ?
-* do a minecraft animation 
-  * elvis skin
-  * 2 spots
-  * one music
-* simple minecraft animation
-  * a mincraft character animatied
-  * 2 spots
-* CLOSED/WONTDO what about threex.spotlighthalohelper.js
-  * PRO much shorter than previous one
-  * PRO adding helper in the name
-  * CON: this is not a halo
-  * CON: the google search output seems to say it is volumetric spotlight the proper name
+How To Use It
+=============
 
 threex.volumetricspotlighthelper.js
 ===================================
@@ -84,8 +64,19 @@ var mesh = new THREE.Mesh(geometry, material)
 scene.add(mesh)
 ```
 
-Possible Improvements
+Possible Improvements 
 =====================
+
+### TODO
+* do a minecraft animation 
+  * elvis skin
+  * 2 spots
+  * one music
+* simple minecraft animation
+  * a mincraft character animatied
+  * 2 spots
+
+### use Depth for 'soft particles'
 * the original post from chapman include 'soft particles'
   * i couldnt get it to work
   * to be precise, it worked with THREE.MeshDepthMaterial
