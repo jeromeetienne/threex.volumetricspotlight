@@ -22,7 +22,7 @@
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		create a scene							//
-	//////////////////////////////////////////////////////////////////////////////////	
+	//////////////////////////////////////////////////////////////////////////////////
 
 	// add back wall
 	var geometry	= new THREE.CubeGeometry( 20, 0.1, 20, 20, 1, 20 );
@@ -36,7 +36,7 @@
 	mesh.position.set( 0, -geometry.height/2, -1)
 	scene.add( mesh );
 	// add back wall - wireframe
-	var material	= new THREE.MeshBasicMaterial({
+	var material	= new THREE.MeshPhongMaterial({
 		wireframe		: true,
 		wireframeLinewidth	: 2,
 		color			: new THREE.Color('black'),
@@ -48,7 +48,7 @@
 	mesh.rotateX(Math.PI/2)
 	mesh.position.set( 0, -geometry.height/2, -1)
 	scene.add( mesh );
-		
+
 	// add ground
 	var geometry	= new THREE.CubeGeometry( 20, 0.1, 20, 20, 1, 20 );
 	var material	= new THREE.MeshPhongMaterial({
@@ -61,7 +61,7 @@
 	scene.add( mesh );
 
 	// add ground - wireframe
-	var material	= new THREE.MeshBasicMaterial({
+	var material	= new THREE.MeshPhongMaterial({
 		wireframe		: true,
 		wireframeLinewidth	: 2,
 		color			: new THREE.Color('black'),
@@ -72,7 +72,7 @@
 	mesh.scale.multiplyScalar(1.01)
 	mesh.position.set( 0, -geometry.height/2, 0)
 	scene.add( mesh );
-	
+
 	// add a cube
 	var geometry	= new THREE.CubeGeometry( 0.3, 2, 0.3 );
 	var material	= new THREE.MeshPhongMaterial({
@@ -116,11 +116,11 @@
 	geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, -geometry.height/2, 0 ) );
 	geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
 	// geometry.computeVertexNormals()
-	// var geometry	= new THREE.CubeGeometry( 3, 1, 3 );	
+	// var geometry	= new THREE.CubeGeometry( 3, 1, 3 );
 	// var material	= new THREE.MeshNormalMaterial({
 	// 	side	: THREE.DoubleSide
 	// });
-	// var material	= new THREE.MeshBasicMaterial({
+	// var material	= new THREE.MeshPhongMaterial({
 	// 	color		: 0x000000,
 	// 	wireframe	: true,
 	// })
@@ -129,7 +129,7 @@
 	mesh.position.set(1.5,2,0)
 	mesh.lookAt(new THREE.Vector3(0,0, 0))
 	material.uniforms.lightColor.value.set('white')
-	material.uniforms.spotPosition.value	= mesh.position	
+	material.uniforms.spotPosition.value	= mesh.position
 	scene.add( mesh );
 
 	// add a DAT.Gui for fine tuning
@@ -138,7 +138,7 @@
 	//////////////////////////////////////////////////////////////////////////////////
 	//		animate the volumetric spotLight				//
 	//////////////////////////////////////////////////////////////////////////////////
-	
+
 	onRenderFcts.push(function(delta, now){
 		var angle	= 0.1 * Math.PI*2*now
 		var target	= new THREE.Vector3(1*Math.cos(angle),0,1*Math.sin(angle))
@@ -149,7 +149,7 @@
 	//////////////////////////////////////////////////////////////////////////////////
 	//		link it with a spotLight					//
 	//////////////////////////////////////////////////////////////////////////////////
-	
+
 	var spotLight	= new THREE.SpotLight()
 	spotLight.position	= mesh.position
 	spotLight.color		= mesh.material.uniforms.lightColor.value
@@ -212,9 +212,9 @@
 	//////////////////////////////////////////////////////////////////////////////////
 
 	onRenderFcts.push(function(){
-		renderer.render(scene, camera);		
+		renderer.render(scene, camera);
 	})
-	
+
 	//////////////////////////////////////////////////////////////////////////////////
 	//		loop runner							//
 	//////////////////////////////////////////////////////////////////////////////////
