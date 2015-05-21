@@ -25,7 +25,7 @@
 	//////////////////////////////////////////////////////////////////////////////////
 
 	// add back wall
-	var geometry	= new THREE.CubeGeometry( 20, 0.1, 20, 20, 1, 20 );
+	var geometry	= new THREE.BoxGeometry( 20, 0.1, 20, 20, 1, 20 );
 	var material	= new THREE.MeshPhongMaterial({
 		color	: new THREE.Color('gray')
 	});
@@ -33,7 +33,7 @@
 	mesh.receiveShadow	= true
 	mesh.castShadow		= true
 	mesh.rotateX(Math.PI/2)
-	mesh.position.set( 0, -geometry.height/2, -1)
+	mesh.position.set( 0, -geometry.parameters.height/2, -1)
 	scene.add( mesh );
 	// add back wall - wireframe
 	var material	= new THREE.MeshPhongMaterial({
@@ -46,18 +46,18 @@
 	mesh.castShadow		= true
 	mesh.scale.multiplyScalar(1.01)
 	mesh.rotateX(Math.PI/2)
-	mesh.position.set( 0, -geometry.height/2, -1)
+	mesh.position.set( 0, -geometry.parameters.height/2, -1)
 	scene.add( mesh );
 
 	// add ground
-	var geometry	= new THREE.CubeGeometry( 20, 0.1, 20, 20, 1, 20 );
+	var geometry	= new THREE.BoxGeometry( 20, 0.1, 20, 20, 1, 20 );
 	var material	= new THREE.MeshPhongMaterial({
 		color	: new THREE.Color('gray')
 	});
 	var mesh	= new THREE.Mesh( geometry, material );
 	mesh.receiveShadow	= true
 	mesh.castShadow		= true
-	mesh.position.set( 0, -geometry.height/2, 0)
+	mesh.position.set( 0, -geometry.parameters.height/2, 0)
 	scene.add( mesh );
 
 	// add ground - wireframe
@@ -70,27 +70,27 @@
 	mesh.receiveShadow	= true
 	mesh.castShadow		= true
 	mesh.scale.multiplyScalar(1.01)
-	mesh.position.set( 0, -geometry.height/2, 0)
+	mesh.position.set( 0, -geometry.parameters.height/2, 0)
 	scene.add( mesh );
 
 	// add a cube
-	var geometry	= new THREE.CubeGeometry( 0.3, 2, 0.3 );
+	var geometry	= new THREE.BoxGeometry( 0.3, 2, 0.3 );
 	var material	= new THREE.MeshPhongMaterial({
 		color	: new THREE.Color('gray')
 	});
 	var mesh	= new THREE.Mesh( geometry, material );
 	mesh.receiveShadow	= true
 	mesh.castShadow		= true
-	mesh.position.set(0,geometry.height/2,0)
+	mesh.position.set(0,geometry.parameters.height/2,0)
 	scene.add( mesh );
 
 	// add a cube
-	var geometry	= new THREE.CubeGeometry( 0.3, 0.3, 0.3 );
+	var geometry	= new THREE.BoxGeometry( 0.3, 0.3, 0.3 );
 	var material	= new THREE.MeshPhongMaterial({
 		color	: new THREE.Color('gray')
 	});
 	var mesh	= new THREE.Mesh( geometry, material );
-	mesh.position.set(0.2,geometry.height/2,0.5)
+	mesh.position.set(0.2,geometry.parameters.height/2,0.5)
 	mesh.receiveShadow	= true
 	mesh.castShadow		= true
 	scene.add( mesh );
@@ -113,10 +113,10 @@
 	// add spot light
 	var geometry	= new THREE.CylinderGeometry( 0.1, 1.5, 5, 32*2, 20, true);
 	// var geometry	= new THREE.CylinderGeometry( 0.1, 5*Math.cos(Math.PI/3)/1.5, 5, 32*2, 20, true);
-	geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, -geometry.height/2, 0 ) );
+	geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, -geometry.parameters.height/2, 0 ) );
 	geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -Math.PI / 2 ) );
 	// geometry.computeVertexNormals()
-	// var geometry	= new THREE.CubeGeometry( 3, 1, 3 );
+	// var geometry	= new THREE.BoxGeometry( 3, 1, 3 );
 	// var material	= new THREE.MeshNormalMaterial({
 	// 	side	: THREE.DoubleSide
 	// });
@@ -151,12 +151,13 @@
 	//////////////////////////////////////////////////////////////////////////////////
 
 	var spotLight	= new THREE.SpotLight()
-	spotLight.position	= mesh.position
+	spotLight.position.copy(mesh.position)
 	spotLight.color		= mesh.material.uniforms.lightColor.value
 	spotLight.exponent	= 30
 	spotLight.angle		= Math.PI/3;
 	spotLight.intensity	= 5
 	scene.add( spotLight )
+	scene.add( spotLight.target )
 	renderer.shadowMapEnabled	= true
 
 	// doesnt seems to work - not moving with the spotLight
